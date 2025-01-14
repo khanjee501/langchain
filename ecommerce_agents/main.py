@@ -9,7 +9,7 @@ from langchain.schema import SystemMessage
 from langchain.agents import OpenAIFunctionsAgent, AgentExecutor
 from dotenv import load_dotenv
 
-from tools.sql import run_query_tool, list_tables
+from tools.sql import run_query_tool, list_tables, describe_tables_tool
 
 load_dotenv()
 
@@ -29,7 +29,7 @@ prompt = ChatPromptTemplate(
     ]
 )
 
-tool = [run_query_tool]
+tool = [run_query_tool, describe_tables_tool]
 
 agent = OpenAIFunctionsAgent(
     llm=chat,

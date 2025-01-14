@@ -12,6 +12,15 @@ def list_tables():
     return "\n".join(row[0] for row in rows if row[0] is not None)
 
 
+def describe_tables(table_names):
+    c = conn.cursor()
+    tables = ", ".join("'" + table + "'" for table in table_names)
+    rows = c.execute(
+        f"SELECT sql FORM sqlite_master WHERE type='table' and name IN ({tables});"
+    )
+    return "\n".join(row[0] for row in rows if row[0] is not None)
+
+
 # table context containing list of the tables in the databases which will be used inside SystemMessage
 # so chatgpt can know the tbales inisde the database.
 def run_sqlite_query(query):
@@ -29,4 +38,11 @@ run_query_tool = Tool.from_function(
     name="run_sqlite_query",
     description="Run a sqlite query.",
     func=run_sqlite_query,
+)
+
+# describe tables tools to return the schema of the tables of the db
+describe_tables_tool = Tool.from_function(
+    name="describe_tables",
+    description="Given a list of tables, return the schema of the tables",
+    func=describe_tables,
 )
