@@ -5,6 +5,15 @@ from langchain.tools import Tool
 conn = sqlite3.connect("db.sqlite")
 
 
+def list_tables():
+    c = conn.cursor()
+    c.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    rows = c.fetchall()
+    return "\n".join(row[0] for row in rows if row[0] is not None)
+
+
+# table context containing list of the tables in the databases which will be used inside SystemMessage
+# so chatgpt can know the tbales inisde the database.
 def run_sqlite_query(query):
     c = conn.cursor()
     # handling sqlite3 errors so gpt can try again with anew query as it is running query against
