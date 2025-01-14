@@ -23,9 +23,11 @@ retriever = db.as_retriever()
 chain = RetrievalQA.from_chain_type(
     llm=chat,
     retriever=retriever,
-    # map reduce can make up facts. For example when returning k=4 chunks the last one can be completely made up
-    # by the gpt itself and it will not be even present in our files that we feed.
-    chain_type="map_reduce",
+    # map rerank can also make up facts. It is almost identical to map_reduce. But one thing is that
+    # it can give a similarity score as well through which it ranks the responses. So it is capable of
+    # giving a response like no other chunk matches users query and can give it a score of 0. Or can even
+    # give full score to an unrelated response. So has limitations.
+    chain_type="map_rerank",
 )
 
 result = chain.run("What is an interesting fact about english language?")
