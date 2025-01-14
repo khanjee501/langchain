@@ -6,6 +6,7 @@ from langchain.prompts import (
     MessagesPlaceholder,
 )
 from langchain.schema import SystemMessage
+from langchain.memory import ConversationBufferMemory
 from langchain.agents import OpenAIFunctionsAgent, AgentExecutor
 from dotenv import load_dotenv
 
@@ -25,6 +26,7 @@ prompt = ChatPromptTemplate(
             "Do not make assumptions about what tables exists or what columns exists. "
             "Instead use the 'describe_tables' and 'run_sqlite_query functions"
         ),
+        MessagesPlaceholder(variable_name="chat_history"),
         HumanMessagePromptTemplate.from_template("{input}"),
         MessagesPlaceholder(
             variable_name="agent_scratchpad",
@@ -32,7 +34,8 @@ prompt = ChatPromptTemplate(
     ]
 )
 
-tool = [
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+tools = [
     run_query_tool,
     describe_tables_tool,
     write_report_tool,
@@ -41,13 +44,16 @@ tool = [
 agent = OpenAIFunctionsAgent(
     llm=chat,
     prompt=prompt,
-    tools=tool,
+    tools=tools,
 )
 
 agent_executor = AgentExecutor(
     agent=agent,
     verbose=True,
-    tools=tool,
+    tools=tools,
+    memory=memory,
 )
 
-agent_executor("summarize top 5 products. Write the summary to a file?")
+agent_executor("How many orders are there? Write the summary to a file?")
+
+agent_executor("repeat the exact same process for every user")
