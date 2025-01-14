@@ -20,7 +20,9 @@ chat = ChatOpenAI()
 prompt = ChatPromptTemplate(
     messages=[
         SystemMessage(
-            content=f"You are an AI agent that has access to SQLite database which has the following tables. \n{tables}"
+            content=f"You are an AI agent that has access to SQLite database which has the following tables. \n{tables}. \n"
+            "Do not make assumptions about what tables exists or what columns exists. "
+            "Instead use the 'describe_tables' and 'run_sqlite_query functions"
         ),
         HumanMessagePromptTemplate.from_template("{input}"),
         MessagesPlaceholder(
