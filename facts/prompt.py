@@ -21,7 +21,11 @@ db = Chroma(
 retriever = db.as_retriever()
 
 chain = RetrievalQA.from_chain_type(
-    llm=chat, retriever=retriever, chain_type="map_reduce"
+    llm=chat,
+    retriever=retriever,
+    # map reduce can make up facts. For example when returning k=4 chunks the last one can be completely made up
+    # by the gpt itself and it will not be even present in our files that we feed.
+    chain_type="map_reduce",
 )
 
 result = chain.run("What is an interesting fact about english language?")
