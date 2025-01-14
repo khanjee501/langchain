@@ -37,4 +37,4 @@ agent_executor = AgentExecutor(
     tools=tool,
 )
 
-agent_executor("How many users are there in the database?")
+agent_executor("How many users have provided a shipping address?")
