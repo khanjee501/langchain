@@ -27,6 +27,8 @@ def create_embeddings_for_pdf(pdf_id: str, pdf_path: str):
     loader = PyPDFLoader(pdf_path)
     docs = loader.load_and_split(text_splitter)
 
+    # custom metadata to add to pinecone so that we can id to pdf. It will help to retreive correct pdfs
+    # by the retriever
     for doc in docs:
         doc.metadata = {
             "page": doc.metadata["page"],
