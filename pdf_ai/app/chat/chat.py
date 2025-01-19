@@ -6,7 +6,6 @@ from app.chat.llms import llm_map
 from app.chat.memories import memory_map
 from app.chat.chains.retrieval import StreamingConversationalRetrievalChain
 from app.web.api import set_conversation_components, get_conversation_components
-
 from app.chat.score import random_component_by_score
 
 
@@ -66,4 +65,5 @@ def build_chat(chat_args: ChatArgs):
         condense_question_llm=condense_question_llm,
         memory=memory,
         retriever=retriever,
+        metadata=chat_args.metadata,
     )
